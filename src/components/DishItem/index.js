@@ -1,44 +1,46 @@
+import {useState} from 'react'
 import {useCart} from '../../context/CartContext'
 import './index.css'
 
 const DishItem = ({dish}) => {
-  const {addToCart, removeFromCart, getItemCount} = useCart()
+  const {addCartItem} = useCart()
+  const [quantity, setQuantity] = useState(0)
 
-  // Ensure count is always a number, never undefined
-  const count = getItemCount(dish.dish_id) || 0
-
-  // Check availability - API uses dish_Availability (with underscore and capital A)
   const isAvailable = dish.dish_Availability !== false
-
-  // Check addons - API uses addonCat
   const hasAddons = dish.addonCat && dish.addonCat.length > 0
 
   const handleDecrement = () => {
-    // Strict check: only proceed if count is greater than 0
-    if (count > 0) {
-      removeFromCart(dish.dish_id)
+    if (quantity > 0) {
+      setQuantity(prev => prev - 1)
     }
   }
 
   const handleIncrement = () => {
-    addToCart(dish.dish_id)
+    setQuantity(prev => prev + 1)
   }
+
+  const handleAddToCart = () => {
+    addCartItem({...dish, quantity})
+    setQuantity(0)
+  }
+
+  const isVeg = dish.dish_Type === 1
 
   return (
     <div className={`dish-item ${!isAvailable ? 'unavailable' : ''}`}>
       <div className="dish-content">
         <div className="dish-info">
           <div className="dish-header">
-            <span
-              className={`availability-indicator ${
-                isAvailable ? 'available' : 'not-available'
-              }`}
-            />
+            <span className={`type-indicator ${isVeg ? 'veg' : 'non-veg'}`}>
+              <span className="type-dot" />
+            </span>
             <h3 className="dish-name">{dish.dish_name}</h3>
           </div>
 
           <div className="dish-meta">
-            <span className="dish-price">SAR {dish.dish_price}</span>
+            <span className="dish-price">
+              {dish.dish_currency} {dish.dish_price}
+            </span>
             <span className="dish-calories">{dish.dish_calories} Calories</span>
           </div>
 
@@ -49,24 +51,35 @@ const DishItem = ({dish}) => {
           )}
 
           {isAvailable ? (
-            <div className="quantity-controls">
-              <button
-                className="qty-btn minus"
-                onClick={handleDecrement}
-                disabled={count === 0}
-                type="button"
-              >
-                -
-              </button>
-              <p className="qty-count">{count}</p>
-              <button
-                className="qty-btn plus"
-                onClick={handleIncrement}
-                type="button"
-              >
-                +
-              </button>
-            </div>
+            <>
+              <div className="quantity-controls">
+                <button
+                  className="qty-btn minus"
+                  onClick={handleDecrement}
+                  disabled={quantity === 0}
+                  type="button"
+                >
+                  -
+                </button>
+                <p className="qty-count">{quantity}</p>
+                <button
+                  className="qty-btn plus"
+                  onClick={handleIncrement}
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              {quantity > 0 && (
+                <button
+                  type="button"
+                  className="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                >
+                  ADD TO CART
+                </button>
+              )}
+            </>
           ) : (
             <p className="not-available-text">Not available</p>
           )}

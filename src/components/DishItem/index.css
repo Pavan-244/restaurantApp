@@ -5,9 +5,7 @@
   margin-bottom: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid #f0f0f0;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dish-item:hover {
@@ -39,22 +37,37 @@
   gap: 10px;
 }
 
-.availability-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+.type-indicator {
+  width: 18px;
+  height: 18px;
   border: 2px solid;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.availability-indicator.available {
-  background-color: #48c479;
+.type-indicator.veg {
   border-color: #48c479;
 }
 
-.availability-indicator.not-available {
-  background-color: #d9534f;
+.type-indicator.non-veg {
   border-color: #d9534f;
+}
+
+.type-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.type-indicator.veg .type-dot {
+  background-color: #48c479;
+}
+
+.type-indicator.non-veg .type-dot {
+  background-color: #d9534f;
 }
 
 .dish-name {
@@ -150,6 +163,25 @@
   justify-content: center;
   margin: 0;
   padding: 0;
+}
+
+.add-to-cart-btn {
+  margin-top: 8px;
+  padding: 10px 24px;
+  background-color: #d9534f;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background-color 0.2s;
+  align-self: flex-start;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #c9302c;
 }
 
 .not-available-text {

@@ -1,73 +1,82 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useCallback,
-  useMemo,
-} from 'react'
+import {createContext, useState, useContext, useCallback, useMemo} from 'react'
 
-const CartContext = createContext(null)
+const CartContext = createContext({
+  cartList: [],
+  removeAllCartItems: () => {},
+  addCartItem: () => {},
+  removeCartItem: () => {},
+  incrementCartItemQuantity: () => {},
+  decrementCartItemQuantity: () => {},
+})
 
 export const CartProvider = ({children}) => {
-  const [cartItems, setCartItems] = useState({})
+  const [cartList, setCartList] = useState([])
 
-  const addToCart = useCallback(dishId => {
-    if (!dishId) return // Guard against undefined dishId
-
-    setCartItems(prev => ({
-      ...prev,
-      [dishId]: (prev[dishId] || 0) + 1,
-    }))
-  }, [])
-
-  const removeFromCart = useCallback(dishId => {
-    if (!dishId) return // Guard against undefined dishId
-
-    setCartItems(prev => {
-      const currentCount = prev[dishId] || 0
-
-      // If count is 0 or doesn't exist, do nothing (prevent negative)
-      if (currentCount <= 0) {
-        return prev
+  const addCartItem = useCallback(dish => {
+    setCartList(prev => {
+      const existingIndex = prev.findIndex(
+        item => item.dish_id === dish.dish_id,
+      )
+      if (existingIndex >= 0) {
+        const updated = [...prev]
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + (dish.quantity || 1),
+        }
+        return updated
       }
-
-      // If count is 1, remove the key entirely
-      if (currentCount === 1) {
-        const {[dishId]: removed, ...rest} = prev
-        return rest
-      }
-
-      // Otherwise decrement by 1
-      return {
-        ...prev,
-        [dishId]: currentCount - 1,
-      }
+      return [...prev, {...dish, quantity: dish.quantity || 1}]
     })
   }, [])
 
-  const getCartCount = useCallback(
-    () => Object.values(cartItems).reduce((sum, count) => sum + count, 0),
-    [cartItems],
-  )
+  const removeCartItem = useCallback(dishId => {
+    setCartList(prev => prev.filter(item => item.dish_id !== dishId))
+  }, [])
 
-  // Ensure this always returns a number, never undefined
-  const getItemCount = useCallback(
-    dishId => {
-      if (!dishId) return 0
-      return cartItems[dishId] || 0
-    },
-    [cartItems],
-  )
+  const removeAllCartItems = useCallback(() => {
+    setCartList([])
+  }, [])
+
+  const incrementCartItemQuantity = useCallback(dishId => {
+    setCartList(prev =>
+      prev.map(item => {
+        if (item.dish_id === dishId) {
+          return {...item, quantity: item.quantity + 1}
+        }
+        return item
+      }),
+    )
+  }, [])
+
+  const decrementCartItemQuantity = useCallback(dishId => {
+    setCartList(prev => {
+      const item = prev.find(i => i.dish_id === dishId)
+      if (item && item.quantity <= 1) {
+        return prev.filter(i => i.dish_id !== dishId)
+      }
+      return prev.map(i =>
+        i.dish_id === dishId ? {...i, quantity: i.quantity - 1} : i,
+      )
+    })
+  }, [])
 
   const value = useMemo(
     () => ({
-      cartItems,
-      addToCart,
-      removeFromCart,
-      getCartCount,
-      getItemCount,
+      cartList,
+      addCartItem,
+      removeCartItem,
+      removeAllCartItems,
+      incrementCartItemQuantity,
+      decrementCartItemQuantity,
     }),
-    [cartItems, addToCart, removeFromCart, getCartCount, getItemCount],
+    [
+      cartList,
+      addCartItem,
+      removeCartItem,
+      removeAllCartItems,
+      incrementCartItemQuantity,
+      decrementCartItemQuantity,
+    ],
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
@@ -75,8 +84,7 @@ export const CartProvider = ({children}) => {
 
 export const useCart = () => {
   const context = useContext(CartContext)
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider')
-  }
   return context
 }
+
+export default CartContext
