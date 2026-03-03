@@ -21,7 +21,6 @@ const DishItem = ({dish}) => {
 
   const handleAddToCart = () => {
     addCartItem({...dish, quantity})
-    setQuantity(0)
   }
 
   const isVeg = dish.dish_Type === 1

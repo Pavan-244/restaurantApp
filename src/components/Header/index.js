@@ -22,11 +22,12 @@ const Header = ({restaurantName, history}) => {
         </Link>
         <div className="header-right">
           <p className="my-orders-text">My Orders</p>
-          <Link to="/cart">
+          <Link to="/cart" className="cart-link">
             <button
               type="button"
               className="cart-icon-wrapper"
               data-testid="cart"
+              aria-label="cart"
             >
               <svg
                 className="cart-icon"
@@ -41,8 +42,8 @@ const Header = ({restaurantName, history}) => {
                 <circle cx="20" cy="21" r="1" />
                 <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
               </svg>
-              <p className="cart-badge">{count}</p>
             </button>
+            <p className="cart-badge">{count}</p>
           </Link>
           <button
             type="button"
