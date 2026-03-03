@@ -39,7 +39,7 @@ const CartItem = ({item}) => {
           </button>
         </div>
         <p className="cart-item-price">
-          {item.dish_currency} {totalPrice.toFixed(2)}
+          {item.dish_currency} {totalPrice}
         </p>
       </div>
       <button

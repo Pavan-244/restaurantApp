@@ -88,33 +88,27 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="home-page">
-        <Header restaurantName="UNI Resto Cafe" />
-        <div className="loading-container">
-          <div className="spinner" role="status" aria-label="Loading">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p>Loading menu...</p>
+      <div className="loading-container">
+        <div className="spinner" role="status" aria-label="Loading">
+          <span className="visually-hidden">Loading...</span>
         </div>
+        <p>Loading menu...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="home-page">
-        <Header restaurantName="UNI Resto Cafe" />
-        <div className="error-container">
-          <h2>Oops! Something went wrong</h2>
-          <p>{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="retry-button"
-            type="button"
-          >
-            Try Again
-          </button>
-        </div>
+      <div className="error-container">
+        <h2>Oops! Something went wrong</h2>
+        <p>{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="retry-button"
+          type="button"
+        >
+          Try Again
+        </button>
       </div>
     )
   }

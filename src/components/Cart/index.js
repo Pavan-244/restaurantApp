@@ -34,17 +34,6 @@ const Cart = () => {
           <CartItem key={item.dish_id} item={item} />
         ))}
       </ul>
-      <div className="cart-summary">
-        <p className="cart-total">
-          Order Total:{' '}
-          <span className="total-amount">
-            {cartList.length > 0 ? cartList[0].dish_currency : 'SAR'}{' '}
-            {cartList
-              .reduce((sum, item) => sum + item.dish_price * item.quantity, 0)
-              .toFixed(2)}
-          </span>
-        </p>
-      </div>
     </div>
   )
 

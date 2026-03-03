@@ -5,7 +5,7 @@ import './index.css'
 
 const Header = ({restaurantName, history}) => {
   const {cartList} = useCart()
-  const count = cartList.length
+  const count = cartList.reduce((sum, item) => sum + item.quantity, 0)
 
   const onClickLogout = () => {
     Cookies.remove('jwt_token')
@@ -41,7 +41,7 @@ const Header = ({restaurantName, history}) => {
                 <circle cx="20" cy="21" r="1" />
                 <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
               </svg>
-              {count > 0 && <span className="cart-badge">{count}</span>}
+              <p className="cart-badge">{count}</p>
             </button>
           </Link>
           <button
